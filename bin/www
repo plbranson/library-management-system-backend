@@ -3,48 +3,48 @@
 /**
  * Module Dependencies
  */
-const http = require("http");
-const app = require("../app");
-const debug = require("debug")("library-management-system-backend:server");
+const http = require('http')
+const app = require('../app')
+const debug = require('debug')('library-management-system-backend:server')
 
 /**
  * Gets the port from the environment and stores it in Express.
  */
-const PORT = normalizePort(process.env.PORT || "8000");
-app.set("port", PORT);
+const PORT = normalizePort(process.env.PORT || '8000')
+app.set('port', PORT)
 
 /**
  * Creates the HTTP server.
  */
-const server = http.createServer(app);
+const server = http.createServer(app)
 
 /**
  * Listens on the provided port, and all other network interfaces.
  */
-server.listen(PORT);
-server.on("error", onError);
-server.on("listening", onListening);
+server.listen(PORT)
+server.on('error', onError)
+server.on('listening', onListening)
 
 /**
  * Normalizes the Port Number into a number, string, or a boolean false value.
- * @param value {unknown} the value of the port should be a number or string and it has to be convertible to a port number
- * @returns
+ * @param {unknown} value the value of the port should be a number or string and it has to be convertible to a port number
+ * @returns a  number, string, or boolean false value.
  */
 function normalizePort(value) {
-    const port = parseInt(value, 10);
+  const port = parseInt(value, 10)
 
-    // The Named Pipe
-    if (isNaN(port)) {
-        return value;
-    }
+  // The Named Pipe
+  if (isNaN(port)) {
+    return value
+  }
 
-    // The Port Number
-    if (port >= 0) {
-        return port;
-    }
+  // The Port Number
+  if (port >= 0) {
+    return port
+  }
 
-    // Port value was not found.
-    return false;
+  // Port value was not found.
+  return false
 }
 
 /**
@@ -52,34 +52,34 @@ function normalizePort(value) {
  * @param error {SystemError} The generic system error call.
  */
 function onError(error) {
-    if (error.syscall !== "listen") {
-        throw error;
-    }
+  if (error.syscall !== 'listen') {
+    throw error
+  }
 
-    // Determines if the PORT is a Pipe or Port and binds it to a string.
-    const bind = typeof PORT === "string" ? "Pipe " + PORT : "Port " + PORT;
+  // Determines if the PORT is a Pipe or Port and binds it to a string.
+  const bind = typeof PORT === 'string' ? 'Pipe ' + PORT : 'Port ' + PORT
 
-    // Handles specific listen errors with friendly messages.
-    switch (error.code) {
-        case "EACCES":
-            console.error(bind + " requires elevated privileges.");
-            process.exit(1);
+  // Handles specific listen errors with friendly messages.
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges.')
+      process.exit(1)
 
-        case "EADDRINUSE":
-            process.error(bind + " is already in use.");
-            process.exit(1);
+    case 'EADDRINUSE':
+      process.error(bind + ' is already in use.')
+      process.exit(1)
 
-        default:
-            throw error;
-    }
+    default:
+      throw error
+  }
 }
 
 /**
  * The event listener for HTTP server "listening" event.
  */
 function onListening() {
-    const address = server.address();
-    // Determines if the address is a Pipe or Port and binds it to a string
-    const bind = typeof address === "string" ? "pipe " + address : "port " + address.port;
-    debug("Listening on " + bind);
+  const address = server.address()
+  // Determines if the address is a Pipe or Port and binds it to a string
+  const bind = typeof address === 'string' ? 'pipe ' + address : 'port ' + address.port
+  debug('Listening on ' + bind)
 }
