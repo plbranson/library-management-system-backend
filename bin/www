@@ -27,60 +27,59 @@ server.on("listening", onListening);
 
 /**
  * Normalizes the Port Number into a number, string, or a boolean false value.
- * @param value {unknown}
+ * @param value {unknown} the value of the port should be a number or string and it has to be convertible to a port number
  * @returns
  */
 function normalizePort(value) {
-  const port = parseInt(value, 10);
+    const port = parseInt(value, 10);
 
-  // The Named Pipe
-  if (isNaN(port)) {
-    return value;
-  }
+    // The Named Pipe
+    if (isNaN(port)) {
+        return value;
+    }
 
-  // The Port Number
-  if (port >= 0) {
-    return port;
-  }
+    // The Port Number
+    if (port >= 0) {
+        return port;
+    }
 
-  // Port value was not found.
-  return false;
+    // Port value was not found.
+    return false;
 }
 
 /**
- * The Event Listener for the HTTP server "error" event.
- * @param error
+ * The event listener for the HTTP server "error" event.
+ * @param error {SystemError} The generic system error call.
  */
 function onError(error) {
-  if (error.syscall !== "listen") {
-    throw error;
-  }
+    if (error.syscall !== "listen") {
+        throw error;
+    }
 
-  const bind = typeof PORT === "string" ? "Pipe " + PORT : "Port " + PORT;
+    // Determines if the PORT is a Pipe or Port and binds it to a string.
+    const bind = typeof PORT === "string" ? "Pipe " + PORT : "Port " + PORT;
 
-  // Handles specific listen errors with friendly messages.
-  switch (error.code) {
-    case "EACCES":
-      console.error(bind + " requires elevated privileges.");
-      process.exit(1);
-      break;
+    // Handles specific listen errors with friendly messages.
+    switch (error.code) {
+        case "EACCES":
+            console.error(bind + " requires elevated privileges.");
+            process.exit(1);
 
-    case "EADDRINUSE":
-      process.error(bind + " is already in use.");
-      process.exit(1);
-      break;
+        case "EADDRINUSE":
+            process.error(bind + " is already in use.");
+            process.exit(1);
 
-    default:
-      throw error;
-  }
+        default:
+            throw error;
+    }
 }
 
 /**
- * The Event Listener for HTTP server "listening" event.
+ * The event listener for HTTP server "listening" event.
  */
 function onListening() {
-  const address = server.address();
-  const bind =
-    typeof address === "string" ? "pipe " + address : "port " + address.port;
-  debug("Listening on " + bind);
+    const address = server.address();
+    // Determines if the address is a Pipe or Port and binds it to a string
+    const bind = typeof address === "string" ? "pipe " + address : "port " + address.port;
+    debug("Listening on " + bind);
 }
