@@ -1,39 +1,66 @@
-var createError = require('http-errors')
-var express = require('express')
-var path = require('path')
-var cookieParser = require('cookie-parser')
-var logger = require('morgan')
+/**
+ * Copyright 2024 Patrick L. Branson
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-var indexRouter = require('./routes/index')
-var usersRouter = require('./routes/users')
+const cors = require('cors')
+const path = require('path')
+const helmet = require('helmet')
+const logger = require('morgan')
+const express = require('express')
+const bodyParser = require('body-parser')
+const compression = require('compression')
+const createError = require('http-errors')
+const cookieParser = require('cookie-parser')
 
-var app = express()
+// Imports the routes
+const indexRouter = require('./routes/index.route')
+const usersRouter = require('./routes/users.route')
 
-// view engine setup
+// Initializes Application
+const app = express()
+
+// The view engine setup
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'ejs')
 
+// The application middleware
+app.use(cors())
+app.use(helmet())
 app.use(logger('dev'))
-app.use(express.json())
-app.use(express.urlencoded({ extended: false }))
+app.use(compression())
 app.use(cookieParser())
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 app.use(express.static(path.join(__dirname, 'public')))
 
+// Adds the routes
 app.use('/', indexRouter)
 app.use('/users', usersRouter)
 
-// catch 404 and forward to error handler
-app.use(function (req, res, next) {
+// Catches the 404 and forwards to the Error Handler
+app.use((req, res, next) => {
   next(createError(404))
 })
 
-// error handler
-app.use(function (err, req, res, next) {
-  // set locals, only providing error in development
+// The Error Handler
+app.use((err, req, res, next) => {
+  // Sets the locals and only provides an error in development
   res.locals.message = err.message
   res.locals.error = req.app.get('env') === 'development' ? err : {}
 
-  // render the error page
+  // Renders the error page
   res.status(err.status || 500)
   res.render('error')
 })
