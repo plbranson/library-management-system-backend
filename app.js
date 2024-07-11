@@ -24,6 +24,9 @@ const compression = require('compression')
 const createError = require('http-errors')
 const cookieParser = require('cookie-parser')
 
+// Allows access to the .env file
+require('dotenv').config()
+
 // Imports the routes
 const indexRouter = require('./routes/index.route')
 const usersRouter = require('./routes/users.route')
